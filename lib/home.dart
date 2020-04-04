@@ -12,6 +12,7 @@ class _HomeState extends State<Home> {
   TextEditingController _tituloController = TextEditingController();
   TextEditingController _descricaoController = TextEditingController();
   var _db = AnotacaoHelper();
+  List<Anotacao> _anotacoes = List<Anotacao>();
 
   _exibirTelaCadastro(){
 
@@ -59,6 +60,27 @@ class _HomeState extends State<Home> {
 
   }
 
+  _recuperarAnotacao() async {
+
+    List anotacoesRecuperadas = await _db.recuperarAnotacao();
+
+    List<Anotacao> ListTemp = List<Anotacao>();
+    for(var item in anotacoesRecuperadas){
+
+      Anotacao anotacao = Anotacao.fromMap(item);
+      ListTemp.add(anotacao);
+
+    }
+
+    setState(() {
+      _anotacoes = ListTemp;
+    });
+    ListTemp = null;
+
+    print("Lista: " + anotacoesRecuperadas.toString());
+
+  }
+
   _salvarAnotacao() async {
 
     String titulo = _tituloController.text;
@@ -69,6 +91,16 @@ class _HomeState extends State<Home> {
     int resultado = await _db.salvarAnotacao(anotacao);
     print("save: " + resultado.toString());
 
+    _tituloController.clear();
+    _descricaoController.clear();
+    _recuperarAnotacao();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _recuperarAnotacao();
   }
 
   @override
@@ -78,7 +110,26 @@ class _HomeState extends State<Home> {
         title: Text("Minhas anotações"),
         backgroundColor: Colors.teal,
       ),
-      body: Container(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+              child: ListView.builder(
+                  itemCount:  _anotacoes.length,
+                  itemBuilder: (context, index){
+
+                    final item = _anotacoes[index];
+
+                    return Card(
+                      child: ListTile(
+                        title: Text(item.titulo),
+                        subtitle: Text("${item.data} - ${item.descricao}"),
+                      ),
+                    );
+                  }
+              )
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,

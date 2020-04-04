@@ -57,4 +57,13 @@ class AnotacaoHelper {
 
   }
 
+  recuperarAnotacao() async {
+
+    var bancoDados = await db;
+    String sql = "SELECT * FROM $tabela ORDER BY data DESC ";
+    List anotacoes = await bancoDados.rawQuery( sql );
+    return anotacoes;
+
+  }
+
 }

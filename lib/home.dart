@@ -132,6 +132,38 @@ class _HomeState extends State<Home> {
 
   }
 
+  _removerNota(int id) async {
+
+
+
+    showDialog(
+        context: context,
+        builder:  (context){
+          return AlertDialog(
+            title: Text("Remover"),
+            content: Text("tem certeza que deseja remover esta anotação?"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancelar"),
+              ),
+              FlatButton(
+                onPressed: () async {
+                  await _db.removerNota(id);
+                  Navigator.pop(context);
+                  _recuperarAnotacao();
+                },
+                child: Text("Deletar"),
+              ),
+            ] ,
+            );
+        }
+    );
+
+
+
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -176,7 +208,7 @@ class _HomeState extends State<Home> {
                             ),
                             GestureDetector(
                               onTap: (){
-
+                              _removerNota(item.id);
                               },
                               child: Padding(
                                   padding: EdgeInsets.only(right: 0),

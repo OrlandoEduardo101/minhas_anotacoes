@@ -1,6 +1,7 @@
 # minhasanotacoes
 
-A new Flutter application.
+Projeto de salvar anotações, 
+objetivo: estudar flutter e persistencia de dados com SQFlite. 
 
 ## Getting Started
 
